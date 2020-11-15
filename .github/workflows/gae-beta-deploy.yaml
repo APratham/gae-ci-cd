@@ -1,4 +1,4 @@
-name: Deploy to App Engine
+name: GAE Beta Deploy
 
 on:
   pull_request:
@@ -9,18 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@main
-    - name: Deploy to App Engine
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    - name: Initialize Google Cloud SDK
+      uses: zxyle/publish-gae-action@master
       with:
-        version: '290.0.1'
+        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         service_account_key: ${{ secrets.SERVICE_ACCOUNT }}
-        export_default_credentials: true
-    - id: Deploy
-      uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
-      with:
-        project_id: ${{ secrets.PROJECT_NAME }}
-    - name: Beta Deploy
+        project_id: ${{ secrets.PROJECT_ID }}
+    - name: Setup gcloud
+      run: |
+        gcloud auth activate-service-account ${{ secrets.GCP_SA_EMAIL }} --key-file=client-secret.json
+        gcloud config set project ${{ secrets.PROJECT_NAME }}
+    - name: Install dependencies
+      run: npm i
+    - name: Build
+      env:
+        CI: ""
+      run: npm run build
+    - name: Deploy
       run: gcloud app deploy --project=${{ secrets.PROJECT_NAME }} --quiet --no-promote
-  ##    uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
-  ##    with:
-  ##      project_id: ${{ secrets.PROJECT_ID}}
