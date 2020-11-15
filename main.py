@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def hello():
     """Return a friendly HTTP greeting."""
-    return 'Hello World!\n'
+    return 'Hello Yadynesh!\n'
 
 
 if __name__ == '__main__':
