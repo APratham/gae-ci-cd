@@ -15,7 +15,7 @@ jobs:
         version: '290.0.1'
         service_account_key: ${{ secrets.SERVICE_ACCOUNT }}
         export_default_credentials: true
-    - id: Beta Deploy
+    - name: Beta Deploy
         run: gcloud app deploy --project=${{ secrets.PROJECT_NAME }} --quiet --no-promote
   ##    uses: GoogleCloudPlatform/github-actions/appengine-deploy@master
   ##    with:
